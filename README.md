@@ -1,89 +1,71 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+**Alegra Studio: Especificaciones del Contrato Inteligente**
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+---
 
-contract RewardToken is ERC20 {
-    constructor() ERC20("AlegraStudioReward", "ASR") {}
-    
-    function mint(address account, uint256 amount) external {
-        _mint(account, amount);
-    }
-}
+**Funcionalidad Básica:**
+El contrato principal de Alegra Studio funcionará como una plataforma de gestión de recompensas y reconocimiento. Su objetivo es registrar y verificar la participación y el logro de usuarios en proyectos digitales, otorgando recompensas en forma de criptomonedas, POAPs e insignias digitales.
 
-contract AlegraStudio is AccessControl, Pausable {
-    using SafeMath for uint256;
+---
 
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+**Entidades Involucradas:**
 
-    struct Project {
-        string name;
-        bool isActive;
-    }
+- **Administrador:** Tiene permisos especiales para modificar parámetros del contrato, añadir o eliminar proyectos y emitir recompensas.
+- **Usuarios:** Personas que participan en proyectos y reciben recompensas.
+- **Proveedores:** Proveen servicios o plataformas externas que complementan las funcionalidades del contrato, como sistemas de verificación para LinkedIn.
 
-    Project[] public projects;
-    RewardToken public rewardToken;
+---
 
-    mapping(address => mapping(uint256 => bool)) public userBadges;
-    mapping(address => uint256) public userRewards;
+**Características y Funciones del Contrato:**
 
-    event ProjectRegistered(string name, uint256 projectId);
-    event UserParticipated(address indexed user, uint256 projectId);
-    event RewardIssued(address indexed user, uint256 amount, uint256 projectId);
+1. **registerProject:** Permite al administrador registrar un nuevo proyecto en la plataforma.
+2. **participate:** Los usuarios pueden indicar su participación en un proyecto específico.
+3. **issueReward:** El administrador emite recompensas (criptomonedas, POAPs e insignias) a usuarios basados en su participación y desempeño en un proyecto.
+4. **verifyBadge:** Función que permite a terceros (como LinkedIn) verificar la autenticidad de una insignia otorgada a un usuario.
+5. **transfer:** Los usuarios pueden transferir sus recompensas a otros usuarios o cuentas.
 
-    constructor(address _rewardToken) {
-        _setupRole(ADMIN_ROLE, msg.sender);
-        rewardToken = RewardToken(_rewardToken);
-    }
+---
 
-    function registerProject(string memory _name) external onlyRole(ADMIN_ROLE) whenNotPaused {
-        projects.push(Project({name: _name, isActive: true}));
-        emit ProjectRegistered(_name, projects.length - 1);
-    }
+**Restricciones y Reglas:**
 
-    function participate(uint256 _projectId) external whenNotPaused {
-        require(_projectId < projects.length, "Invalid project");
-        require(projects[_projectId].isActive, "Project is not active");
-        emit UserParticipated(msg.sender, _projectId);
-    }
+- Sólo el administrador puede registrar proyectos y emitir recompensas.
+- Las recompensas (criptomonedas) tienen un límite máximo por proyecto para garantizar la equidad.
+- Las insignias son únicas y no transferibles.
 
-    function issueReward(address _user, uint256 _amount, uint256 _projectId) external onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(_projectId < projects.length, "Invalid project");
-        userRewards[_user] = userRewards[_user].add(_amount);
-        rewardToken.mint(_user, _amount);
-        emit RewardIssued(_user, _amount, _projectId);
-    }
+---
 
-    function grantBadge(address _user, uint256 _projectId) external onlyRole(ADMIN_ROLE) {
-        require(_projectId < projects.length, "Invalid project");
-        userBadges[_user][_projectId] = true;
-    }
+**Eventos y Notificaciones:**
 
-    function verifyBadge(address _user, uint256 _projectId) external view returns (bool) {
-        require(_projectId < projects.length, "Invalid project");
-        return userBadges[_user][_projectId];
-    }
+- **ProjectRegistered:** Se emite cuando un nuevo proyecto es registrado.
+- **UserParticipated:** Se emite cuando un usuario indica su participación en un proyecto.
+- **RewardIssued:** Se emite cuando se otorga una recompensa a un usuario.
 
-    function transferReward(address _recipient, uint256 _amount) external whenNotPaused {
-        require(userRewards[msg.sender] >= _amount, "Insufficient reward balance");
-        rewardToken.transferFrom(msg.sender, _recipient, _amount);
-        userRewards[msg.sender] = userRewards[msg.sender].sub(_amount);
-        userRewards[_recipient] = userRewards[_recipient].add(_amount);
-    }
+---
 
-    function deactivateProject(uint256 _projectId) external onlyRole(ADMIN_ROLE) {
-        require(_projectId < projects.length, "Invalid project");
-        projects[_projectId].isActive = false;
-    }
+**Interacción con Otros Contratos o Tokens:**
 
-    function pauseContract() external onlyRole(ADMIN_ROLE) {
-        _pause();
-    }
+- El contrato podría necesitar interactuar con un contrato ERC-20 para el manejo de las criptomonedas como recompensas.
+- Integración con contratos POAP para la emisión de Pruebas de Asistencia en Persona.
 
-    function unpauseContract() external onlyRole(ADMIN_ROLE) {
-        _unpause();
-    }
-}
+---
+
+**Seguridad y Otros Detalles:**
+
+- La función de pausa está presente, permitiendo al administrador pausar el contrato en caso de emergencia o actualizaciones.
+- Privacidad: Los detalles exactos de la participación del usuario en proyectos se mantienen privados, sólo se almacenan hashes de estos datos.
+
+---
+
+**Integraciones Externas:**
+
+- Se requiere una interfaz/API que permita a servicios como LinkedIn verificar las insignias otorgadas por la plataforma.
+- Integración con plataformas de gestión de proyectos para validar la participación y desempeño del usuario.
+
+---
+
+**Propósito del Contrato en GitHub:**
+
+- Se planea mantener el contrato en un repositorio de GitHub para transparencia y auditorías.
+- Versión del compilador recomendada: Solidity ^0.8.0.
+- La configuración de la red y las pruebas se detallarán en el README del repositorio.
+
+---
