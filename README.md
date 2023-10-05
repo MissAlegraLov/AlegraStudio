@@ -1,6 +1,8 @@
 [README.md](https://github.com/MissAlegraLov/AlegraStudio/files/12824222/README.md)
+
 **Alegra Studio: Especificaciones del Contrato Inteligente**
-[# alegra_studio
+
+[# alegra_studio]
 
 Welcome to your new alegra_studio project and to the internet computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
