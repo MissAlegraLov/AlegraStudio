@@ -68,6 +68,8 @@ Uploading README.md…]()
 
 ---
 
+DAO & dApp:  https://docs.google.com/document/d/1x-MBTtoylopgBPlYCG_OMlxY-oDXs_cfwZX1f-WB1rg/edit?usp=sharing
+
 **Funcionalidad Básica:**
 El contrato principal de Alegra Studio funcionará como una plataforma de gestión de recompensas y reconocimiento. Su objetivo es registrar y verificar la participación y el logro de usuarios en proyectos digitales, otorgando recompensas en forma de criptomonedas, POAPs e insignias digitales.
 
