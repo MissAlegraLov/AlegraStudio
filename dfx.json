@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "alegra_studio_backend": {
+      "main": "src/alegra_studio_backend/main.mo",
+      "type": "motoko"
+    },
+    "alegra_studio_frontend": {
+      "dependencies": [
+        "alegra_studio_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/alegra_studio_frontend/src/index.html"
+      },
+      "source": [
+        "src/alegra_studio_frontend/assets",
+        "dist/alegra_studio_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
