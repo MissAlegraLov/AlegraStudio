@@ -137,3 +137,24 @@ El contrato principal de Alegra Studio funcionará como una plataforma de gesti�
 - La configuración de la red y las pruebas se detallarán en el README del repositorio.
 
 ---
+
+El contrato `AlegraStudio` de la DAO esta diseñado para facilitar a los estudiantes la oportunidad de presentar y validar proyectos, y para que los emprendedores se inscriban y presenten su idea de negocio. Este contrato puede ser extremadamente beneficioso para los estudiantes universitarios en Colombia que enfrentan los desafíos que mencionaste. A continuación, se detalla cómo:
+
+1. **Reconocimiento y Validación de Habilidades:** 
+   - A menudo, el curriculum estándar de las universidades no aborda las habilidades prácticas requeridas en el mundo real. Mediante este contrato, los estudiantes pueden presentar proyectos en los que hayan trabajado, detallando las habilidades adquiridas.
+   - El proceso de votación de validación permite que otros validen y reconozcan las habilidades del estudiante y el valor de su proyecto. Una vez validado, el estudiante recibe una insignia "AlegraStudio Validated", que podría considerarse como un respaldo o reconocimiento de sus habilidades.
+
+2. **Incentivos a través de CryptoRewards:**
+   - El modelo de recompensas en criptomoneda puede motivar a los estudiantes a trabajar en proyectos innovadores y prácticos. Estas recompensas pueden actuar como un capital inicial para los estudiantes que quieran convertir su proyecto en una startup.
+
+3. **Plataforma para Emprendedores:**
+   - La función `registerEntrepreneur` permite que los estudiantes o graduados que quieran emprender puedan inscribirse como emprendedores, ya sea en la categoría de "Digital" o "Tradicional".
+   - Esto proporciona una plataforma donde los emprendedores pueden ser descubiertos por posibles inversores, mentores, o incluso clientes.
+
+4. **Reducción de la Brecha entre la Universidad y el Emprendimiento:**
+   - Dado que la universidad no proporciona las herramientas necesarias para emprender, esta plataforma puede actuar como un puente entre la educación formal y el emprendimiento. Los estudiantes pueden usar esta plataforma para ganar reconocimiento, aprender de otros, y potencialmente encontrar colaboradores o inversores.
+
+5. **Fomento de la Cultura Emprendedora:**
+   - Al ofrecer una plataforma donde los estudiantes pueden presentar sus ideas y recibir retroalimentación, se fomenta una cultura de innovación y emprendimiento. Aquellos estudiantes que podrían haberse conformado con un trabajo tradicional podrían sentirse inspirados para seguir su pasión y emprender.
+
+En resumen, el contrato `AlegraStudio` de la DAO proporciona una plataforma para que los estudiantes presenten y validen sus habilidades y proyectos, y para que los emprendedores registren y promocionen sus ideas de negocio. Esta plataforma puede ser especialmente valiosa en un contexto donde las universidades no proporcionan el apoyo y las herramientas necesarias para emprender. Al usar esta plataforma, los estudiantes y jóvenes graduados tienen una oportunidad adicional para seguir sus pasiones y emprender en áreas que les apasionen.
