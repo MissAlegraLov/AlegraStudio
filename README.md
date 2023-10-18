@@ -1,5 +1,7 @@
 [README.md](https://github.com/MissAlegraLov/AlegraStudio/files/12824222/README.md)
 
+AlegraStudio DAO se presenta como una solución innovadora para cerrar la brecha entre la educación universitaria y las demandas del mundo emprendedor en Colombia. Al conectar a estudiantes, emprendedores y otros stakeholders en una plataforma descentralizada, facilita el reconocimiento de habilidades, la promoción de ideas de negocio y la creación de un ecosistema robusto que fomenta la innovación y el emprendimiento. Sus estructuras de ingresos y costos están alineadas para garantizar la sostenibilidad mientras proporciona valor significativo a todos los participantes.
+
 **Alegra Studio: Especificaciones del Contrato Inteligente**
 
 [# alegra_studio]
