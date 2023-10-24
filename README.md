@@ -28,9 +28,6 @@ Launch the test runner in interactive watch mode. Learn more about [running test
 
 Build the app for production to the `build` folder. It bundles React in production mode and optimizes the build for the best performance. Your app is now ready to be deployed. Learn more about [deployment](https://facebook.github.io/create-react-app/docs/deployment).
 
-### `npm run eject`
-
-Please note that this is a one-way operation. Once you eject, you can't go back. Ejecting removes the single build dependency from your project and allows you to have full control over your configurations. You don't have to use `eject` if you don't need to customize the build tool.
 
 ## Join Alegra Studio
 
