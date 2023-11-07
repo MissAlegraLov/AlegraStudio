@@ -1,78 +1,119 @@
-import Map "mo:base/HashMap";
-import Nat "mo:base/Nat";
+import HashMap "mo:base/HashMap";
+import Nat32 "mo:base/Nat32";
 import Text "mo:base/Text";
+import Principal "mo:base/Principal";
 import Debug "mo:base/Debug";
-import Bool "mo:base/Bool";
 
-actor AlegraStudio {
-
-    type StudentMetadata = {
-        name: Text;
-        university: Text;
-        projectTitle: Text;
-        skillsAcquired: [Text];
-        cryptoReward: Nat;
-        badge: Text;
+actor ProyectoCanister {
+    type ProyectoId = Nat32;
+    
+    type EstadoProyecto = {
+        #Borrador;
+        #Publicado;
     };
 
-    // DAO de Alegra Studio para votación de validación de proyectos
-    type Vote = {
-        studentId: Text;
-        votes: Nat;
+    type Proyecto = {
+        estudiante: Principal;
+        descripcion: Text;
+        proyectodb: Text;
+        estado: EstadoProyecto;
     };
 
-    // Map to store student data
-    let studentDB = Map.HashMap<Text, StudentMetadata>(0, Text.equal, Text.hash);
+    // Base de datos de proyectos
+    var proyectoDb : HashMap.HashMap<ProyectoId, Proyecto> = 
+        HashMap.HashMap<ProyectoId, Proyecto>(Nat32.equal, Nat32.hash);
 
-    // Map to store project validation votes
-    let votesDB = Map.HashMap<Text, Vote>(0, Text.equal, Text.hash);
+    // ID de proyecto inicial
+    stable var nextProyectoId : ProyectoId = 0;
 
-    public func registerStudent(id: Text, data: StudentMetadata) : async() {
-        studentDB.put(id, data);
-        Debug.print("Student registered!");
+    // Función auxiliar para generar un nuevo ID de proyecto
+    private func generateProyectoId() : ProyectoId {
+        let id = nextProyectoId;
+        nextProyectoId := Nat32.add(nextProyectoId, 1);
+        return id;
     };
 
-    public func validateProject(studentId: Text) : async(Bool) {
-        let studentData = studentDB.get(studentId);
-        switch (studentData) {
-            case (null) { Debug.trap("Student not found!"); };
-            case (?data) {
-                let currentVotes = switch (votesDB.get(studentId)) {
-                    case (null) { 0 };
-                    case (?votes) { votes.votes };
+    // Función auxiliar para generar el valor de proyectodb
+    private func generateProyectodb(id: ProyectoId) : Text {
+        return "https://alegrastudio.com/proyecto/" # Nat32.toText(id);
+    };
+
+     // Inscribir (crear) un proyecto
+    public func inscribirProyecto(descripcion: Text) : async ProyectoId {
+        let id = generateProyectoId();
+        let proyectodb = generateProyectodb(id);
+        let proyecto = {
+            estudiante = Principal.fromActor(msg.caller);  // Usa : para asignar valores en un registro
+            descripcion = descripcion;
+            proyectodb = proyectodb;
+            estado = #Borrador;
+        };
+        proyectoDb.put(id, proyecto);
+        Debug.print("Nuevo proyecto inscrito con ID: " # Nat32.toText(id));
+        return id;
+    };
+
+    // Actualizar la descripción de un proyecto existente
+    public func actualizarProyecto(id: ProyectoId, nuevaDescripcion: Text) : async Bool {
+        switch (proyectoDb.get(id)) {
+            case (null) {
+                Debug.print("Proyecto no encontrado.");
+                return false;
+            };
+            case (?proyecto) {
+                if (proyecto.estudiante != Principal.fromActor(msg.caller)) {
+                    Debug.print("Solo el creador del proyecto puede actualizarlo.");
+                    return false;
                 };
-                let updatedVotes = currentVotes + 1;
-                
-                // Assuming a threshold of 5 votes to validate a project and award a badge
-                if (updatedVotes >= 5) {
-                    data.badge := "AlegraStudio Validated";
-                    studentDB.put(studentId, data);
-                    votesDB.remove(studentId); // Reset votes after validation
-                    Debug.print("Project validated and badge awarded!");
-                } else {
-                    votesDB.put(studentId, {studentId = studentId; votes = updatedVotes});
-                    Debug.print("Vote recorded!");
+                let nuevoProyecto = {
+                    estudiante = proyecto.estudiante;
+                    descripcion = nuevaDescripcion;
+                    proyectodb = proyecto.proyectodb;
+                    estado = proyecto.estado;
                 };
+                proyectoDb.put(id, nuevoProyecto);
+                Debug.print("Proyecto actualizado.");
                 return true;
             };
         };
     };
 
-    public query func viewStudentData(studentId: Text) : async ?StudentMetadata {
-        return studentDB.get(studentId);
-    };
-
-    public func updateStudentData(studentId: Text, newData: StudentMetadata) : async(Bool) {
-        if (studentDB.replace(studentId, newData) == null) {
-            Debug.trap("Student not found!");
-            return false;
+    // Publicar un proyecto (cambiar su estado a público)
+    public func publicarProyecto(id: ProyectoId) : async Bool {
+        switch (proyectoDb.get(id)) {
+            case (null) {
+                Debug.print("Proyecto no encontrado.");
+                return false;
+            };
+            case (?proyecto) {
+                if (proyecto.estudiante != Principal.fromActor(msg.caller)) {
+                    Debug.print("Solo el creador del proyecto puede publicarlo.");
+                    return false;
+                };
+                let nuevoProyecto = {
+                    estudiante = proyecto.estudiante;
+                    descripcion = proyecto.descripcion;
+                    proyectodb = proyecto.proyectodb;
+                    estado = #Publicado;
+                };
+                proyectoDb.put(id, nuevoProyecto);
+                Debug.print("Proyecto publicado.");
+                return true;
+            };
         };
-        Debug.print("Student data updated!");
-        return true;
     };
 
-    public func deleteStudent(studentId: Text) : async() {
-        studentDB.remove(studentId);
-        Debug.print("Student removed!");
+    // Obtener la lista de todos los proyectos
+    public query func obtenerProyectos() : async [(ProyectoId, Proyecto)] {
+        return HashMap.toArray(proyectoDb);
     };
-};
+
+    // Obtener proyectos específicos del estudiante que llama la función
+    public query func obtenerMisProyectos() : async [(ProyectoId, Proyecto)] {
+        let caller = Principal.fromActor(msg.caller);
+        let misProyectos = HashMap.toArray(proyectoDb).filter(func ((_, proyecto)) -> Bool {
+            return proyecto.estudiante == caller;
+        });
+        return misProyectos;
+    };
+}
