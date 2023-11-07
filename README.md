@@ -2,7 +2,7 @@
 
 # Getting Started with Alegra Studio
 
-Welcome to Alegra Studio, your startup school on the Internet Computer! This project is designed to help young entrepreneurs and students connect, collaborate, and innovate within a decentralized ecosystem. Alegra Studio DAO leverages blockchain technology to provide incentives, recognition, and support for your entrepreneurial journey.
+Welcome to Alegra Studio, your startup school on the Internet Computer! This project is designed to help young entrepreneurs and students connect, collaborate, and innovate within a decentralized ecosystem. Alegra Studio DAO leverages blockchain technology to provide incentives, recognition, and support for your entrepreneurial journey!
 
 ## About Alegra Studio DAO
 
